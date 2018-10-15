@@ -29,23 +29,19 @@ import mimetypes
 import os
 import re
 import select
+import shutil
 import socket
 import sys
+import threading
 import time
 import traceback
 from contextlib import contextmanager
+from http.server import BaseHTTPRequestHandler
+from http.server import HTTPServer
+from urllib.request import Request
+from urllib.request import urlopen
 
 import xmltodict
-
-py3 = sys.version_info[0] == 3
-if py3:
-    from urllib.request import urlopen
-    from urllib.request import Request
-    from http.server import HTTPServer
-    from http.server import BaseHTTPRequestHandler
-
-import shutil
-import threading
 
 SSDP_GROUP = ("239.255.255.250", 1900)
 URN_AVTransport = "urn:schemas-upnp-org:service:AVTransport:1"
@@ -78,9 +74,7 @@ class DownloadProxy(BaseHTTPRequestHandler):
             content_type = mimetypes.guess_type(url)[0]
         else:
             f = urlopen(url=url)
-
-            if py3:
-                content_type = f.getheader("Content-Type")
+            content_type = f.getheader("Content-Type")
 
         self.send_response(200, "ok")
         self.send_header('Access-Control-Allow-Origin', '*')
@@ -113,12 +107,8 @@ class DownloadProxy(BaseHTTPRequestHandler):
 
         try:
             if not content_type:
-                if py3:
-                    content_type = f.getheader("Content-Type")
-                    size = f.getheader("Content-Length")
-                else:
-                    content_type = f.info().getheaders("Content-Type")[0]
-                    size = f.info().getheaders("Content-Length")[0]
+                content_type = f.getheader("Content-Type")
+                size = f.getheader("Content-Length")
 
             self.send_response(200)
             self.send_header('Access-Control-Allow-Origin', '*')
