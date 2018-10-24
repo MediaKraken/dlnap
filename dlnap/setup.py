@@ -29,6 +29,6 @@ setup(name='dlnap',
       ],
       py_modules=['dlnap'],
       install_requires=[
-          'xmltodict>=0.11.0',
+          'xmltodict',
       ],
-)
+      )
