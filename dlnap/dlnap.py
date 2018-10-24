@@ -647,13 +647,11 @@ if __name__ == '__main__':
         sys.exit(1)
 
     if action in ('', 'list'):
-        print('Discovered devices:')
         for d in allDevices:
             print(' {} {}'.format('[a]' if d.has_av_transport else '[x]', d))
         sys.exit(0)
 
     d = allDevices[0]
-    print(d)
 
     if url.lower().replace('https://', '').replace('www.', '').startswith('youtube.'):
         import subprocess
