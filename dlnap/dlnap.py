@@ -2,6 +2,7 @@
 
 # @file dlnap.py
 # @author cherezov.pavel@gmail.com
+# @ 0.15 and on author spootdev@gmail.com
 # @brief Python over the network media player to playback on DLNA UPnP devices.
 
 # Change log:
@@ -19,10 +20,10 @@
 #   0.12 local files can be played as well now via proxy
 #   0.13 ssdp protocol version argument added
 #   0.14 fixed bug with receiving responses from device
-#
-#   1.0  moved from idea version
+#   0.15 Removed py2, version and help/usage since embedded
 
-__version__ = "0.14"
+
+__version__ = "0.15"
 
 import logging
 import mimetypes
@@ -544,40 +545,8 @@ def discover(name='', ip='', timeout=1, st=SSDP_ALL, mx=3, ssdp_version=1):
 if __name__ == '__main__':
     import getopt
 
-
-    def usage():
-        print(
-            '{} [--ip <device ip>] [-d[evice] <name>] [--all] [-t[imeout] <seconds>] [--play <url>] [--pause] [--stop] [--proxy]'.format(
-                __file__))
-        print('  --ip <device ip> - ip address for faster access to the known device')
-        print(
-            '  --device <device name or part of the name> - discover devices with this name as substring')
-        print(
-            '  --all - flag to discover all upnp devices, not only devices with AVTransport ability')
-        print(
-            '  --play <url> - set current url for play and start playback it. In case of url is empty - continue playing recent media.')
-        print('  --pause - pause current playback')
-        print('  --stop - stop current playback')
-        print('  --mute - mute playback')
-        print('  --unmute - unmute playback')
-        print('  --volume <vol> - set current volume for playback')
-        print('  --seek <position in HH:MM:SS> - set current position for playback')
-        print('  --timeout <seconds> - discover timeout')
-        print('  --ssdp-version <version> - discover devices by protocol version, default 1')
-        print('  --proxy - use local proxy on proxy port')
-        print(
-            '  --proxy-port <port number> - proxy port to listen incomming connections from devices, default 8000')
-        print('  --help - this help')
-
-
-    def version():
-        print(__version__)
-
-
     try:
         opts, args = getopt.getopt(sys.argv[1:], "hvd:t:i:", [  # information arguments
-            'help',
-            'version',
             'log=',
 
             # device arguments
@@ -607,7 +576,6 @@ if __name__ == '__main__':
             'proxy',
             'proxy-port='])
     except getopt.GetoptError:
-        usage()
         sys.exit(1)
 
     device = ''
@@ -623,13 +591,7 @@ if __name__ == '__main__':
     proxy_port = 8000
     ssdp_version = 1
     for opt, arg in opts:
-        if opt in ('-h', '--help'):
-            usage()
-            sys.exit(0)
-        elif opt in ('-v', '--version'):
-            version()
-            sys.exit(0)
-        elif opt in ('--log'):
+        if opt in ('--log'):
             if arg.lower() == 'debug':
                 logLevel = logging.DEBUG
             elif arg.lower() == 'info':
