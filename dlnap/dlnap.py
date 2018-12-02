@@ -149,7 +149,7 @@ def _get_port(location):
 
 
 def _get_control_urls(xml):
-    """ Extract AVTransport contol url from device description xml
+    """ Extract AVTransport control url from device description xml
 
     xml -- device description xml
     return -- control url or empty string if wasn't found
@@ -158,8 +158,13 @@ def _get_control_urls(xml):
         return {i['serviceType']: i['controlURL'] for i in
                 xml['root']['device']['serviceList']['service']}
     except:
-        return
-
+        pass
+    try:
+        return {i['serviceType']: i['controlURL'] for i in
+                xml['root']['device']['deviceList']['device']['serviceList']['service']}
+    except:
+        pass
+    return
 
 @contextmanager
 def _send_udp(to, packet):
